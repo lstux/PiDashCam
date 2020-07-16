@@ -47,6 +47,7 @@ if ! [ -n "${OUTPUT_FILE}" ]; then
   [ -n "${DOWNLOAD_DIR}" ] || DOWNLOAD_DIR="$(pwd)"
   OUTPUT_FILE="${DOWNLOAD_DIR}/$(basename "${REAL_LINK}")"
 fi
+OUTPUT_FILE="$(realpath "${OUTPUT_FILE}")"
 
 DOWNLOAD_DIR="$(dirname "${OUTPUT_FILE}")"
 if ! [ -d "${DOWNLOAD_DIR}" ]; then
@@ -65,3 +66,9 @@ fi
 
 printf "Downloading to ${OUTPUT_FILE}...\n"
 curl -o "${OUTPUT_FILE}" "${REAL_LINK}"
+
+printf "To prepare SD card (eg: /dev/sdX) :\n"
+printf "  unzip ${OUTPUT_FILE} -d ${DOWNLOAD_DIR} && \\\n"
+printf "  dd if=$(basename "${OUTPUT_FILE}" .zip).img of=/dev/sdX bs=4M status=progress conv=fsync\n"
+printf "Or :\n"
+printf "  unzip -p ${OUTPUT_FILE} | dd if=${OUTPUT_FILE} bs=4M status=progress conv=fsync\n"
