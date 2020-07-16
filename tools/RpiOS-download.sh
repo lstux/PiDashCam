@@ -25,12 +25,12 @@ final_link() {
   curl -IL -o /dev/null -s -w "%{url_effective}\n" "${1}"
 }
 
-while getopts d:o:tfmh opt; do case "${opt}" in
+while getopts d:o:tflh opt; do case "${opt}" in
   d) DOWNLOAD_DIR="${OPTARG}";;
   o) OUTPUT_FILE="${OPTARG}";;
   t) LINK_ONLY=true;;
   f) [ -n "${IMAGE_TYPE}" ] && usage "multiples image types specified..."; IMAGE_TYPE="_full";;
-  m) [ -n "${IMAGE_TYPE}" ] && usage "multiples image types specified..."; IMAGE_TYPE="_lite";;
+  l) [ -n "${IMAGE_TYPE}" ] && usage "multiples image types specified..."; IMAGE_TYPE="_lite";;
   *) usage;;
 esac; done
 
@@ -63,4 +63,5 @@ if ! [ -d "${DOWNLOAD_DIR}" ]; then
   install -d -m755 "${DOWNLOAD_DIR}" || exit 2
 fi
 
+printf "Downloading to ${OUTPUT_FILE}...\n"
 curl -o "${OUTPUT_FILE}" "${REAL_LINK}"
